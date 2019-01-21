@@ -51,7 +51,6 @@ class RadioComponent extends AppComponent {
     }
 
     handleClick = (e) => {
-        console.log('state', this.state.readOnly);
         if(this.state.readOnly){
             e.preventDefault();
         }else {
