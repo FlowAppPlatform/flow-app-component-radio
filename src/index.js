@@ -8,6 +8,9 @@ class RadioComponent extends AppComponent {
   constructor() {
     super();
     const newState = {
+      interactiveMode: false,
+      readOnly: false,
+      radioInputValue: false,
       properties: [
         {
           categoryName: 'General',
@@ -42,6 +45,24 @@ class RadioComponent extends AppComponent {
     this.state = Object.assign(this.state, newState); // merge two states together, and dont lose any parent state properties.
   }
 
+    componentDidMount(){
+        const interactiveMode = !(this.props.propertyData.interactiveMode === undefined);
+        this.setState({interactiveMode, readOnly: interactiveMode});
+    }
+
+    handleClick = (e) => {
+        if(this.state.readOnly){
+            e.preventDefault();
+        }else {
+            this.setState(prevState => ({radioInputValue: !prevState.radioInputValue}))
+        }
+    }
+    handleDbClick = (e) => {
+        if(this.state.interactiveMode){
+            this.setState(prevState => ({readOnly: !prevState.readOnly}))
+        }
+    }
+
   renderContent() {
     return (
       <div className="radio-container">
@@ -50,8 +71,12 @@ class RadioComponent extends AppComponent {
             type="radio"
             name="checkbox"
             id="radio"
-            value="true"
             className="radio-input"
+            value={this.state.radioInputValue}
+            checked={this.state.radioInputValue}
+            onDoubleClick={this.handleDbClick}
+            onClick={this.handleClick}
+            onChange={()=>{}}
           />
           Radio
         </label>
