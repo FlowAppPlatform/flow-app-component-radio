@@ -45,27 +45,37 @@ class RadioComponent extends AppComponent {
     this.state = Object.assign(this.state, newState); // merge two states together, and dont lose any parent state properties.
   }
 
-    componentDidMount(){
-        const interactiveMode = !(this.props.propertyData.interactiveMode === undefined);
-        this.setState({interactiveMode, readOnly: interactiveMode});
-    }
+  componentDidMount(){
+    const interactiveMode = !(this.props.propertyData.interactiveMode === undefined);
+    this.setState({interactiveMode, readOnly: interactiveMode});
+  }
 
-    handleClick = (e) => {
-        if(this.state.readOnly){
-            e.preventDefault();
-        }else {
-            this.setState(prevState => ({radioInputValue: !prevState.radioInputValue}))
-        }
+  handleClick = (e) => {
+    if(this.state.readOnly){
+      e.preventDefault();
+    }else {
+      this.setState(prevState => ({radioInputValue: !prevState.radioInputValue}));
+      this.triggerGraphEvent()
     }
-    handleDbClick = (e) => {
-        if(this.state.interactiveMode){
-            this.setState(prevState => ({readOnly: !prevState.readOnly}))
-        }
+  }
+
+  handleDbClick = (e) => {
+    if(this.state.interactiveMode){
+      this.setState(prevState => ({readOnly: !prevState.readOnly}))
     }
+  }
+
+  triggerGraphEvent = () => {
+    const graphId = this.getPropertyData('event');
+    this.getElementProps().onEvent(graphId)
+  }
 
   renderContent() {
     return (
-      <div className="radio-container">
+      <div 
+        className="radio-container"
+        onMouseOver={this.triggerGraphEvent}
+      >
         <label htmlFor="radio" className="radio-label">
           <input
             type="radio"
@@ -76,7 +86,8 @@ class RadioComponent extends AppComponent {
             checked={this.state.radioInputValue}
             onDoubleClick={this.handleDbClick}
             onClick={this.handleClick}
-            onChange={()=>{}}
+            onMouseOver={this.triggerGraphEvent}
+            onChange={this.triggerGraphEvent}
           />
           Radio
         </label>
