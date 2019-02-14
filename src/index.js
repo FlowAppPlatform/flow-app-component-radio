@@ -22,8 +22,29 @@ class RadioComponent extends AppComponent {
           categoryDescription: 'Events for the radio button',
           properties: [
             {
-              id: 'event',
-              name: 'Events',
+              id: 'load',
+              name: 'Load Event',
+              type: 'graph',
+              options: {},
+              data: null,
+            },
+            {
+              id: 'click',
+              name: 'Click Event',
+              type: 'graph',
+              options: {},
+              data: null,
+            },
+            {
+              id: 'change',
+              name: 'Change Event',
+              type: 'graph',
+              options: {},
+              data: null,
+            },
+            {
+              id: 'hover',
+              name: 'Hover Event',
               type: 'graph',
               options: {},
               data: null,
@@ -48,6 +69,7 @@ class RadioComponent extends AppComponent {
   componentDidMount(){
     const interactiveMode = !(this.props.propertyData.interactiveMode === undefined);
     this.setState({interactiveMode, readOnly: interactiveMode});
+    this.triggerGraphEvent('load');
   }
 
   handleClick = (e) => {
@@ -55,7 +77,7 @@ class RadioComponent extends AppComponent {
       e.preventDefault();
     }else {
       this.setState(prevState => ({radioInputValue: !prevState.radioInputValue}));
-      this.triggerGraphEvent()
+      this.triggerGraphEvent('click');
     }
   }
 
@@ -65,16 +87,16 @@ class RadioComponent extends AppComponent {
     }
   }
 
-  triggerGraphEvent = () => {
-    const graphId = this.getPropertyData('event');
-    this.getElementProps().onEvent(graphId)
+  triggerGraphEvent = (eventId) => {
+    const graphId = this.getPropertyData(eventId);
+    this.getElementProps().onEvent(graphId);
   }
 
   renderContent() {
     return (
       <div 
         className="radio-container"
-        onMouseOver={this.triggerGraphEvent}
+        onMouseOver={() => this.triggerGraphEvent('hover')}
       >
         <label htmlFor="radio" className="radio-label">
           <input
@@ -86,8 +108,8 @@ class RadioComponent extends AppComponent {
             checked={this.state.radioInputValue}
             onDoubleClick={this.handleDbClick}
             onClick={this.handleClick}
-            onMouseOver={this.triggerGraphEvent}
-            onChange={this.triggerGraphEvent}
+            onMouseOver={() => this.triggerGraphEvent('hover')}
+            onChange={() => this.triggerGraphEvent('change')}
           />
           Radio
         </label>
