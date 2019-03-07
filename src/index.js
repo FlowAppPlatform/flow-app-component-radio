@@ -89,7 +89,9 @@ class RadioComponent extends AppComponent {
 
   triggerGraphEvent = (eventId) => {
     const graphId = this.getPropertyData(eventId);
-    this.getElementProps().onEvent(graphId);
+    if (typeof this.getElementProps().onEvent === 'function') {
+      this.getElementProps().onEvent(graphId);
+    }
   }
 
   renderContent() {
